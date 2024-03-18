@@ -41,47 +41,35 @@ useradd roboshop  &>>$LOGFILE
 
 mkdir /app  &>>$LOGFILE
 
-curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zip  &>>$LOGFILE
+curl -o /tmp/cart.zip https://roboshop-builds.s3.amazonaws.com/cart.zip  &>>$LOGFILE
 
-VALIDATE $? "Downloading catalogue artifact"
+VALIDATE $? "Downloading cart artifact"
 
 cd /app  &>>$LOGFILE
 
 VALIDATE $? "Moving into app directory"
 
-unzip /tmp/catalogue.zip &>>$LOGFILE
+unzip /tmp/cart.zip &>>$LOGFILE
  
-VALIDATE $? "Unziping catalogue"
+VALIDATE $? "Unziping catalgue"
 
 npm install  &>>$LOGFILE
 
 VALIDATE $? "installing dependencies"
 
-cp /home/centos/roboshopshell/catalouge.service /etc/systemd/system/catalogue.service  &>>$LOGFILE
+cp /home/centos/roboshopshell/cart.service /etc/systemd/system/cart.service  &>>$LOGFILE
 
-VALIDATE $? "copying catalouge.service"
+VALIDATE $? "copying cart.service"
 
 systemctl daemon-reload  &>>$LOGFILE
 
 VALIDATE $? "daemon-reload"
 
-systemctl enable catalogue &>>$LOGFILE
+systemctl enable cart  &>>$LOGFILE
 
-VALIDATE $? "enabling catalouge"
+VALIDATE $? "enabling cart"
 
-systemctl start catalogue  &>>$LOGFILE
+systemctl start cart  &>>$LOGFILE
 
-VALIDATE $? "starting catalogue"
+VALIDATE $? "starting cart"
 
-cp /home/centos/roboshopshell/mongo.repo  /etc/yum.repos.d/mongo.repo  &>>$LOGFILE
-
-VALIDATE $? "copying mongo.repo"
-
-yum install mongodb-org-shell -y  &>>$LOGFILE
-
-VALIDATE $? "Installing mongo client"
-
-
-mongo --host mongodb.joindevops.online </app/schema/catalogue.js  &>>$LOGFILE
-
-VALIDATE $? "loading catalogue data into mongodb"
